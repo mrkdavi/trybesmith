@@ -1,25 +1,17 @@
-import { Pool, ResultSetHeader } from 'mysql2/promise';
-import { OrderData } from '../@types/services/OrderService';
+import { Pool, RowDataPacket } from 'mysql2/promise';
 import Order from './Entities/Order';
 
 export default class OrderModel {
   constructor(private connection: Pool) { }
 
-  public async getAll(): Promise<Order[]> {
-    const result = await this.connection
-      .execute('SELECT * FROM Trybesmith.Orders');
-    const [rows] = result;
-    return rows as Order[];
-  }
-
-  public async create(orderData: OrderData): Promise<Order> {
-    const { userId } = orderData;
-    const result = await this.connection.execute<ResultSetHeader>(
-      'INSERT INTO Trybesmith.Orders (userId) VALUES (?)',
-      [userId],
-    );
-    const [dataInserted] = result;
-    const { insertId } = dataInserted;
-    return { ...orderData, id: insertId } as Order;
-  }
+  getAll = async (): Promise<Order[]> => {
+    const [result] = await this.connection
+      .execute<(Order & RowDataPacket)[]>(
+      `SELECT o.id, o.userId, JSON_ARRAYAGG(p.id) as productsIds
+        FROM Trybesmith.Orders o
+        INNER JOIN Trybesmith.Products p
+        ON o.id = p.orderId
+        GROUP BY o.id`);
+    return result;
+  };
 }
