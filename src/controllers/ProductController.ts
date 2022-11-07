@@ -1,0 +1,20 @@
+import { Request, Response } from 'express';
+import ProductService from '../services/ProductService';
+
+import { TypedRequest } from '../@types/request/TypedRequest';
+import { ProductData } from '../@types/services/ProductService';
+
+export default class ProductController {
+  constructor(private productService = new ProductService()) {}
+
+  getAll = async (_req: Request, res: Response) => {
+    const products = await this.productService.getAll();
+    res.status(200).json(products);
+  };
+
+  create = async (req: TypedRequest<ProductData>, res: Response) => {
+    const { name, amount } = req.body;
+    const product = await this.productService.create({ name, amount });
+    res.status(201).json(product);
+  };
+}
