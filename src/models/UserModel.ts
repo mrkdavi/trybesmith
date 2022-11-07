@@ -12,6 +12,6 @@ export default class UserModel {
     );
     const [dataInserted] = result;
     const { insertId } = dataInserted;
-    return { ...userData, id: insertId } as UserModelReturn;
+    return { ...userData, id: insertId };
   };
 }
