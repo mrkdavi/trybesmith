@@ -3,11 +3,7 @@ import { ProductData } from '../@types/services/ProductService';
 import Product from './Entities/Product';
 
 export default class ProductModel {
-  public connection: Pool;
-
-  constructor(connection: Pool) {
-    this.connection = connection;
-  }
+  constructor(private connection: Pool) { }
 
   public async getAll(): Promise<Product[]> {
     const result = await this.connection

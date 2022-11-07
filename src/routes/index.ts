@@ -1,5 +1,5 @@
 import { Express } from 'express';
-import productRouter from './ProductRouter';
+import productRouter from './productRouter';
 
 const createRouter = (app: Express) => {
   app.use('/products', productRouter);

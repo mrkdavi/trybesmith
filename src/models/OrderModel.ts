@@ -3,11 +3,7 @@ import { OrderData } from '../@types/services/OrderService';
 import Order from './Entities/Order';
 
 export default class OrderModel {
-  public connection: Pool;
-
-  constructor(connection: Pool) {
-    this.connection = connection;
-  }
+  constructor(private connection: Pool) { }
 
   public async getAll(): Promise<Order[]> {
     const result = await this.connection
