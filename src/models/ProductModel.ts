@@ -5,14 +5,14 @@ import Product from './Entities/Product';
 export default class ProductModel {
   constructor(private connection: Pool) { }
 
-  public async getAll(): Promise<Product[]> {
+  getAll = async (): Promise<Product[]> => {
     const result = await this.connection
       .execute('SELECT * FROM Trybesmith.Products');
     const [rows] = result;
     return rows as Product[];
-  }
+  };
 
-  public async create(productData: ProductData): Promise<Product> {
+  create = async (productData: ProductData): Promise<Product> => {
     const { name, amount } = productData;
     const result = await this.connection.execute<ResultSetHeader>(
       'INSERT INTO Trybesmith.Products (name, amount) VALUES (?, ?)',
@@ -21,5 +21,5 @@ export default class ProductModel {
     const [dataInserted] = result;
     const { insertId } = dataInserted;
     return { ...productData, id: insertId } as Product;
-  }
+  };
 }
